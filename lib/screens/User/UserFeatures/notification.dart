@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_umrah_app/ColorTheme/color_theme.dart';
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});
@@ -30,21 +31,21 @@ class NotificationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: ColorTheme.background,
       appBar: AppBar(
-        backgroundColor: Colors.teal,
+        backgroundColor: ColorTheme.background,
         elevation: 4,
         centerTitle: true,
         title: const Text(
           "Notifications",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22, color: Colors.white),
         ),
         actions: [
           IconButton(
             onPressed: () {
               // Add functionality to mark all as read if needed
             },
-            icon: const Icon(Icons.mark_email_read),
+            icon: const Icon(Icons.mark_email_read, color: Color(0xFF3B82F6)),
           ),
         ],
       ),
@@ -56,14 +57,14 @@ class NotificationScreen extends StatelessWidget {
           return Container(
             margin: const EdgeInsets.symmetric(vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: const Color(0xFF283645),
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.15),
-                  spreadRadius: 2,
-                  blurRadius: 6,
-                  offset: const Offset(0, 3),
+                  color: Colors.black.withOpacity(0.25),
+                  spreadRadius: 1,
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
                 ),
               ],
             ),
@@ -73,23 +74,24 @@ class NotificationScreen extends StatelessWidget {
                 vertical: 12,
               ),
               leading: CircleAvatar(
-                backgroundColor: Colors.teal.shade100,
-                child: const Icon(Icons.notifications, color: Colors.teal),
+                backgroundColor: const Color(0xFF3B82F6).withOpacity(0.2),
+                child: const Icon(Icons.notifications, color: Color(0xFF3B82F6)),
               ),
               title: Text(
                 notification['title']!,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
+                  color: Colors.white,
                 ),
               ),
               subtitle: Text(
                 notification['body']!,
-                style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
+                style: const TextStyle(fontSize: 14, color: Colors.white70),
               ),
               trailing: Text(
                 notification['time']!,
-                style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
+                style: const TextStyle(fontSize: 12, color: Colors.white54),
               ),
               onTap: () {
                 // Action when notification is tapped

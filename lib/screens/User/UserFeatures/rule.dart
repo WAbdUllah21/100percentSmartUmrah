@@ -33,7 +33,7 @@ class UmrahRulesScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           "Umrah Rules & Regulations",
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.teal),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
         centerTitle: true,
         backgroundColor: ColorTheme.background,
@@ -44,7 +44,7 @@ class UmrahRulesScreen extends StatelessWidget {
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(
-              child: CircularProgressIndicator(color: Colors.teal),
+              child: CircularProgressIndicator(color: Color(0xFF3B82F6)),
             );
           }
 
@@ -63,13 +63,14 @@ class UmrahRulesScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.teal,
+                    color: Colors.white,
                   ),
                 ),
                 const SizedBox(height: 10),
 
                 ...umrahRules.map((rule) {
                   return Card(
+                    color: Color(0xFF283645), // changed
                     elevation: 5,
                     margin: const EdgeInsets.symmetric(vertical: 8),
                     shape: RoundedRectangleBorder(
@@ -82,10 +83,10 @@ class UmrahRulesScreen extends StatelessWidget {
                       ),
                       leading: CircleAvatar(
                         radius: 26,
-                        backgroundColor: Colors.teal.shade100,
+                        backgroundColor: Color(0xFF3B82F6).withOpacity(0.2), // changed
                         child: Icon(
                           getIconByName(rule["icon"] ?? ""),
-                          color: Colors.teal,
+                          color: Color(0xFF3B82F6), // changed
                           size: 28,
                         ),
                       ),
@@ -94,6 +95,7 @@ class UmrahRulesScreen extends StatelessWidget {
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
+                          color: Colors.white, // changed
                         ),
                       ),
                       subtitle: Padding(
@@ -102,7 +104,7 @@ class UmrahRulesScreen extends StatelessWidget {
                           rule["desc"] ?? "",
                           style: const TextStyle(
                             fontSize: 15,
-                            color: Colors.black87,
+                            color: Colors.white70, // changed
                           ),
                         ),
                       ),
@@ -120,13 +122,14 @@ class UmrahRulesScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.teal,
+                    color: Color(0xFF3B82F6), // changed
                   ),
                 ),
                 const SizedBox(height: 10),
 
                 ...travelRules.map((item) {
                   return Card(
+                    color: Color(0xFF283645), // changed
                     elevation: 3,
                     margin: const EdgeInsets.symmetric(vertical: 6),
                     shape: RoundedRectangleBorder(
@@ -135,12 +138,15 @@ class UmrahRulesScreen extends StatelessWidget {
                     child: ListTile(
                       leading: const Icon(
                         Icons.flight_takeoff,
-                        color: Colors.teal,
+                        color: Color(0xFF3B82F6), // changed
                         size: 28,
                       ),
                       title: Text(
                         item.toString(),
-                        style: const TextStyle(fontSize: 15),
+                        style: const TextStyle(
+                          fontSize: 15,
+                          color: Colors.white, // changed
+                        ),
                       ),
                     ),
                   );
@@ -154,9 +160,12 @@ class UmrahRulesScreen extends StatelessWidget {
       /// BACK BUTTON
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => Get.back(),
-        label: const Text("Back"),
-        icon: const Icon(Icons.arrow_back),
-        backgroundColor: Colors.teal,
+        label: const Text(
+          "Back",
+          style: TextStyle(color: Colors.white), // changed
+        ),
+        icon: const Icon(Icons.arrow_back, color: Colors.white), // changed
+        backgroundColor: Color(0xFF3B82F6), // changed
       ),
     );
   }

@@ -19,17 +19,17 @@ class TrackExpenses extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           "Track Expenses",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
         centerTitle: true,
         foregroundColor: Colors.white,
-        backgroundColor: Colors.teal,
+        backgroundColor: Color(0xFF101820),
         elevation: 6,
       ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFFE0F7FA), Colors.white],
+            colors: [Color(0xFF1B2A3B), Color(0xFF101820)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -42,14 +42,13 @@ class TrackExpenses extends StatelessWidget {
                   return const Center(
                     child: Text(
                       "No expenses added yet",
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                      style: TextStyle(fontSize: 16, color: Colors.white70),
                     ),
                   );
                 }
 
                 return LayoutBuilder(
                   builder: (context, constraints) {
-                    // Determine number of columns based on screen width
                     int crossAxisCount = 1;
                     double width = constraints.maxWidth;
                     if (width >= 600 && width < 900) crossAxisCount = 2;
@@ -61,7 +60,7 @@ class TrackExpenses extends StatelessWidget {
                         crossAxisCount: crossAxisCount,
                         crossAxisSpacing: 16,
                         mainAxisSpacing: 16,
-                        childAspectRatio: 3, // Width-to-height ratio for cards
+                        childAspectRatio: 3,
                       ),
                       itemCount: expenseController.expenses.length,
                       itemBuilder: (context, index) {
@@ -69,11 +68,11 @@ class TrackExpenses extends StatelessWidget {
                         return Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: const Color(0xFF283645),
                             borderRadius: BorderRadius.circular(16),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.15),
+                                color: Colors.black.withOpacity(0.3),
                                 spreadRadius: 2,
                                 blurRadius: 6,
                                 offset: const Offset(0, 3),
@@ -85,12 +84,12 @@ class TrackExpenses extends StatelessWidget {
                               Container(
                                 padding: const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
-                                  color: Colors.teal.withOpacity(0.1),
+                                  color: const Color(0xFF3B82F6).withOpacity(0.15),
                                   shape: BoxShape.circle,
                                 ),
                                 child: const Icon(
                                   Icons.receipt_long,
-                                  color: Colors.teal,
+                                  color: Color(0xFF3B82F6),
                                 ),
                               ),
                               const SizedBox(width: 12),
@@ -103,13 +102,14 @@ class TrackExpenses extends StatelessWidget {
                                       expense.item,
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
+                                        color: Colors.white,
                                       ),
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
                                       expense.place,
                                       style: const TextStyle(
-                                        color: Colors.grey,
+                                        color: Colors.white70,
                                       ),
                                     ),
                                     Text(
@@ -118,7 +118,7 @@ class TrackExpenses extends StatelessWidget {
                                       ).format(expense.date),
                                       style: const TextStyle(
                                         fontSize: 12,
-                                        color: Colors.grey,
+                                        color: Colors.white60,
                                       ),
                                     ),
                                   ],
@@ -131,7 +131,7 @@ class TrackExpenses extends StatelessWidget {
                                     "${expense.amount.toStringAsFixed(2)} SAR",
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.teal,
+                                      color: Color(0xFF3B82F6),
                                     ),
                                   ),
                                   Row(
@@ -140,7 +140,7 @@ class TrackExpenses extends StatelessWidget {
                                       IconButton(
                                         icon: const Icon(
                                           Icons.edit,
-                                          color: Colors.blue,
+                                          color: Colors.amber,
                                           size: 22,
                                         ),
                                         onPressed: () => showEditExpenseDialog(
@@ -151,7 +151,7 @@ class TrackExpenses extends StatelessWidget {
                                       IconButton(
                                         icon: const Icon(
                                           Icons.delete,
-                                          color: Colors.red,
+                                          color: Colors.redAccent,
                                           size: 22,
                                         ),
                                         onPressed: () => expenseController
@@ -170,8 +170,6 @@ class TrackExpenses extends StatelessWidget {
                 );
               }),
             ),
-
-            // Add Expense Button
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: SizedBox(
@@ -179,7 +177,7 @@ class TrackExpenses extends StatelessWidget {
                 child: ElevatedButton.icon(
                   onPressed: () => showAddExpenseDialog(context),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal,
+                    backgroundColor: const Color(0xFF3B82F6),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -197,14 +195,12 @@ class TrackExpenses extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-
-            // Total Section
             Obx(() {
               return Container(
                 padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.teal.shade700,
-                  borderRadius: const BorderRadius.vertical(
+                decoration: const BoxDecoration(
+                  color: Color(0xFF15222F),
+                  borderRadius: BorderRadius.vertical(
                     top: Radius.circular(18),
                   ),
                 ),
