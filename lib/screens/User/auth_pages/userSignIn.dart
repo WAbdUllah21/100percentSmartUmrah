@@ -105,34 +105,33 @@ class UserSignInScreen extends StatelessWidget {
                     () => CustomButton(
                       text: 'L O G I N',
                       isLoading: _isLoading.value,
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           _isLoading.value = true;
 
+                          // 🔥 Admin login (as you already had)
                           if (_emailController.text.trim() ==
                                   "admin@gmail.com" &&
                               _passwordController.text.trim() == "admin123") {
+                            _isLoading.value = false;
                             Get.toNamed(AppRoutes.admindashboard);
                             return;
                           }
-                          _signincontroller
-                              .loginUser(
-                                _emailController.text.trim(),
-                                _passwordController.text.trim(),
-                                context,
-                                AccountType.user,
-                              )
-                              .then((_) {
-                                _isLoading.value = false;
-                                Get.offNamed(AppRoutes.userdashboard);
-                              })
-                              .catchError((error) {
-                                // Handle any errors that occur during login
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(error.toString())),
-                                );
-                                _isLoading.value = false;
-                              });
+
+                          bool success = await _signincontroller.loginUser(
+                            _emailController.text.trim(),
+                            _passwordController.text.trim(),
+                            context,
+                            AccountType.user,
+                          );
+
+                          _isLoading.value = false;
+
+                          if (success) {
+                            Get.offNamed(
+                              AppRoutes.userdashboard,
+                            ); // ✅ Redirect only when success
+                          }
                         }
                       },
                       width: MediaQuery.of(context).size.width * 0.5,

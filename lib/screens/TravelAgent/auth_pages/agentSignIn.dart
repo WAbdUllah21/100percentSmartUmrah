@@ -14,9 +14,10 @@ class AgentSignInScreen extends StatelessWidget {
   final RxBool _obscureText = true.obs;
   final RxBool _isLoading = false.obs;
 
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  AgentSigninController _signincontroller = Get.put(AgentSigninController());
+  final AgentSigninController _signincontroller =
+      Get.put(AgentSigninController());
 
   @override
   Widget build(BuildContext context) {
@@ -37,19 +38,12 @@ class AgentSignInScreen extends StatelessWidget {
           child: Form(
             key: _formKey,
             child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    'assets/umrah_app_logo.png',
-                    height: 150,
-                    width: 150,
-                    fit: BoxFit.cover,
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-
+                  const SizedBox(height: 24),
+                  Image.asset('assets/umrah_app_logo.png',
+                      height: 150, width: 150),
+                  const SizedBox(height: 24),
                   customTextField(
                     "Enter Email Address",
                     controller: _emailController,
@@ -57,131 +51,112 @@ class AgentSignInScreen extends StatelessWidget {
                     prefixIcon: const Icon(Icons.email),
                   ),
                   const SizedBox(height: 16),
-
                   Obx(
                     () => TextFormField(
-                      obscureText: _obscureText.value,
                       controller: _passwordController,
+                      obscureText: _obscureText.value,
                       decoration: InputDecoration(
                         hintText: "Password",
-                        prefixIcon: Icon(Icons.lock, color: Colors.black),
-                        fillColor: Colors.white,
+                        prefixIcon: const Icon(Icons.lock),
                         filled: true,
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 10,
-                        ),
+                        fillColor: Colors.white,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide.none,
                         ),
                         suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscureText.value
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                          ),
+                          icon: Icon(_obscureText.value
+                              ? Icons.visibility_off
+                              : Icons.visibility),
                           onPressed: () {
                             _obscureText.value = !_obscureText.value;
                           },
                         ),
                       ),
-                      validator: (value) =>
-                          AuthFormValidation.validatePassword(value),
+                      validator: AuthFormValidation.validatePassword,
                     ),
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                  const SizedBox(height: 12),
                   Align(
-                    alignment: AlignmentGeometry.bottomRight,
+                    alignment: Alignment.centerRight,
                     child: TextButton(
                       onPressed: () {
                         Get.toNamed(AppRoutes.forgotpassword);
                       },
-                      child: Text(
+                      child: const Text(
                         "Forgot Password",
                         style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          decoration: TextDecoration.underline,
-                          decorationColor: Colors.white,
-                          color: Colors.white,
-                        ),
+                            decoration: TextDecoration.underline,
+                            color: Colors.white),
                       ),
                     ),
                   ),
-
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                  const SizedBox(height: 10),
                   Obx(
                     () => CustomButton(
                       text: 'L O G I N',
                       isLoading: _isLoading.value,
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          _isLoading.value = true;
+                      onPressed: () async {
+                        if (!_formKey.currentState!.validate()) return;
 
-                          if (_emailController.text.trim() ==
-                                  "admin@gmail.com" &&
-                              _passwordController.text.trim() == "admin123") {
-                            Get.toNamed(AppRoutes.admindashboard);
-                            return;
-                          }
-                          _signincontroller.AgentloginUser(
-                                _emailController.text.trim(),
-                                _passwordController.text.trim(),
-                                context,
-                              )
-                              .then((_) {
-                                _isLoading.value = false;
-                                Get.offNamed(AppRoutes.agentdashboard);
-                              })
-                              .catchError((error) {
-                                // Handle any errors that occur during login
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(error.toString())),
-                                );
-                                _isLoading.value = false;
-                              });
+                        _isLoading.value = true;
+
+                        // Admin shortcut
+                        if (_emailController.text.trim() == "admin@gmail.com" &&
+                            _passwordController.text.trim() == "admin123") {
+                          _isLoading.value = false;
+                          Get.offNamed(AppRoutes.admindashboard);
+                          return;
                         }
+
+                        bool success =
+                            await _signincontroller.AgentloginUser(
+                          _emailController.text.trim(),
+                          _passwordController.text.trim(),
+                          context,
+                        );
+
+                        _isLoading.value = false;
+
+                        if (success) {
+                          Get.offNamed(AppRoutes.agentdashboard);
+                        }
+                        // if not success, the controller already showed Snackbar
                       },
                       width: MediaQuery.of(context).size.width * 0.5,
                     ),
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                  const SizedBox(height: 20),
                   const Text(
                     "Don't Have an account ?",
-                    textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.white),
                   ),
                   const SizedBox(height: 8),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pop(context);
                       Get.toNamed(AppRoutes.agentregister);
                     },
                     child: const Text(
                       "REGISTER",
                       style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        decoration: TextDecoration.underline,
-                        color: Colors.blue,
-                      ),
+                          fontWeight: FontWeight.w500,
+                          decoration: TextDecoration.underline,
+                          color: Colors.blue),
                     ),
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                  const SizedBox(height: 20),
                   Row(
                     children: const [
-                      Expanded(child: Divider(thickness: 1)),
+                      Expanded(child: Divider(color: Colors.white)),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Text(
-                          'OR',
-                          style: TextStyle(fontSize: 14, color: Colors.white),
-                        ),
+                        child:
+                            Text('OR', style: TextStyle(color: Colors.white)),
                       ),
-                      Expanded(child: Divider(thickness: 1)),
+                      Expanded(child: Divider(color: Colors.white)),
                     ],
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                  // LoginWithGoogle(),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),

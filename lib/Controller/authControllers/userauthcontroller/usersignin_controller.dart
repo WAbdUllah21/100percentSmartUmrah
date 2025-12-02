@@ -8,120 +8,80 @@ import 'package:smart_umrah_app/routes/routes.dart';
 enum AccountType { user, agent }
 
 class SigninController extends GetxController {
-  /// Login user or agent
-  Future<void> loginUser(
+  Future<bool> loginUser(
     String email,
     String password,
     BuildContext context,
-    AccountType accountType,
+    AccountType type,
   ) async {
     try {
-      // Step 1: Sign in directly
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-            email: email.trim(),
-            password: password.trim(),
-          );
-
-      User? user = userCredential.user;
-
-      if (user == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Login failed.'),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-        return;
-      }
-
-      // Step 2: Check email verification
-      if (!user.emailVerified) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please verify your email first, then log in.'),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-        return;
-      }
-
-      // Step 3: Check the appropriate Firestore collection
-      String collection = accountType == AccountType.user
-          ? 'Users'
-          : 'TravelAgents';
-
-      DocumentSnapshot profileSnapshot = await FirebaseFirestore.instance
-          .collection(collection)
-          .doc(user.uid)
+      // 🔍 CHECK: Is user email registered in Users collection?
+      QuerySnapshot userQuery = await FirebaseFirestore.instance
+          .collection('Users')
+          .where('email', isEqualTo: email.trim())
           .get();
 
-      if (!profileSnapshot.exists) {
+      if (userQuery.docs.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              accountType == AccountType.user
-                  ? 'This account is not registered as a User.'
-                  : 'This account is not registered as an Agent.',
+              'This email is not registered. Please sign up first.',
+              style: TextStyle(color: Colors.white),
             ),
             backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
           ),
         );
-        return;
+        return false; // ❌ DO NOT REDIRECT
       }
 
-      // Step 4: Save info locally
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isEmailVerified', true);
-      await prefs.setString('userEmail', user.email ?? '');
-      await prefs.setString('userUID', user.uid);
-      await prefs.setString('accountType', accountType.name);
+      // 🔐 Login with FirebaseAuth
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email.trim(),
+        password: password.trim(),
+      );
 
-      // Step 5: Navigate to appropriate dashboard
-      if (accountType == AccountType.user) {
-        print('MOUNTED OR NOT :${context.mounted}');
-        if (context.mounted) {
-          print('User logged in: ${user.email}');
-          print('User Password: ${user.updatePassword(password)}');
+      User? user = userCredential.user;
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('User logged in successfully!'),
-              backgroundColor: Colors.green,
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
-          Get.toNamed(AppRoutes.userdashboard);
-        }
+      if (user != null && user.emailVerified) {
+        // 💾 Save Login Session
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isEmailVerified', true);
+        await prefs.setString('userEmail', user.email ?? '');
+        await prefs.setString('userUID', user.uid);
+
+        return true; // ✅ SUCCESS → Allow redirect
       } else {
-        Get.toNamed(AppRoutes.agentdashboard);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Please verify your email before logging in.',
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return false; // ❌ DO NOT REDIRECT
       }
     } on FirebaseAuthException catch (e) {
-      String errorMessage = 'Login failed';
-      if (e.code == 'user-not-found') {
-        errorMessage = 'No account found for this email.';
-      } else if (e.code == 'wrong-password') {
-        errorMessage = 'Incorrect password.';
-      }
+      String message = "Login failed";
+
+      if (e.code == 'user-not-found') message = "No user found with this email.";
+      if (e.code == 'wrong-password') message = "Incorrect password.";
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(errorMessage),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-        ),
+        SnackBar(content: Text(message), backgroundColor: Colors.red),
       );
+
+      return false;
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error: $e'),
+          content: Text('Error: $e', style: TextStyle(color: Colors.white)),
           backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
         ),
       );
+      return false;
     }
   }
 }

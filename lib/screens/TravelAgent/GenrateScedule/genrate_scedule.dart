@@ -38,9 +38,9 @@ class GenerateSchedulePage extends StatelessWidget {
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Color(0xFF5E4FC3),
-                  Color(0xFF8E7BDE),
-                  Color(0xFFD3CFFF),
+                  Color(0xFF00695C),   // Teal shade
+                  Color(0xFF26A69A),   // Light teal
+                  Color(0xFFB2DFDB),   // Very soft teal
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -52,7 +52,7 @@ class GenerateSchedulePage extends StatelessWidget {
             bottom: -40,
             right: -30,
             child: Opacity(
-              opacity: 0.15,
+              opacity: 0.12,
               child: Image(
                 image: AssetImage("assets/masjid.png"),
                 height: height * 0.45,
@@ -90,7 +90,7 @@ class GenerateSchedulePage extends StatelessWidget {
       width: width,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.18),
+        color: Colors.white.withOpacity(0.20),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: Colors.white30, width: 1),
       ),
@@ -100,7 +100,7 @@ class GenerateSchedulePage extends StatelessWidget {
           customTextField(
             "Departure City",
             controller: controller.departureCityController,
-            prefixIcon: Icon(Icons.location_on),
+            prefixIcon: Icon(Icons.location_on, color: Colors.teal),
             labelText: "Enter city",
           ),
 
@@ -126,8 +126,7 @@ class GenerateSchedulePage extends StatelessWidget {
             "Number of Pilgrims",
             keyboardType: TextInputType.number,
             controller: controller.pilgrimsCountController,
-            prefixIcon: Icon(Icons.group),
-
+            prefixIcon: Icon(Icons.group, color: Colors.teal),
             labelText: "Enter count",
           ),
 
@@ -136,7 +135,7 @@ class GenerateSchedulePage extends StatelessWidget {
           customTextField(
             "Hotel Preference",
             controller: controller.hotelController,
-            prefixIcon: Icon(Icons.hotel),
+            prefixIcon: Icon(Icons.hotel, color: Colors.teal),
             labelText: "Enter hotel",
           ),
 
@@ -178,7 +177,7 @@ class GenerateSchedulePage extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.26),
+              color: Colors.white.withOpacity(0.25),
               borderRadius: BorderRadius.circular(14),
             ),
             child: Row(
@@ -208,7 +207,10 @@ class GenerateSchedulePage extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           gradient: const LinearGradient(
-            colors: [Color(0xFF4C3BCF), Color(0xFFA594F9)],
+            colors: [
+              Color(0xFF00897B),  // Teal
+              Color(0xFF26A69A),  // Light teal
+            ],
           ),
         ),
         child: const Row(
